@@ -11,6 +11,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import stas.batura.bookreader.ui.main.MainFragment
 import stas.batura.bookreader.ui.main.TextPagerAdapter
+import stas.batura.bookreader.ui.main.ViewPagerAdapter
 import stas.batura.bookreader.ui.main.utils.PageSplitter
 
 class MainActivity : AppCompatActivity() {
@@ -52,33 +53,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         pagesView = findViewById(R.id.pages)
-//        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
-        pagerAdapter!!.addFragment(MainFragment())
-        pagerAdapter!!.addFragment(MainFragment())
+        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, null)
+        pagerAdapter!!.addFragment(MainFragment.newInstance("my argument"))
+        pagerAdapter!!.addFragment(MainFragment.newInstance("my argument1"))
 
         pagesView!!.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        pagesView!!.setAdapter(pagerAdapter)
+        pagesView!!.adapter = pagerAdapter
+//        pagesView!!.adapter = ViewPagerAdapter()
 
-        //        // to get ViewPager width and height we have to wait global layout
-        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val pageSplitter = PageSplitter(pagesView!!.getWidth(), pagesView!!.getHeight(), 1.toFloat(), 0)
-                val textPaint = TextPaint()
-                textPaint.textSize = resources.getDimension(R.dimen.text_size)
-                for (i in 0..999) {
-                    pageSplitter.append("Hello, ", textPaint)
-                    textPaint.isFakeBoldText = true
-                    pageSplitter.append("world", textPaint)
-                    textPaint.isFakeBoldText = false
-                    pageSplitter.append("! ", textPaint)
-                    if ((i + 1) % 100 == 0) {
-                        pageSplitter.append("\n", textPaint)
-                    }
-                }
-                pagesView!!.setAdapter(ScreenSlidePagerAdapter(supportFragmentManager, pageSplitter.getPages()))
-                pagesView!!.getViewTreeObserver().removeOnGlobalLayoutListener(this)
-            }
-        })
+//        //        // to get ViewPager width and height we have to wait global layout
+//        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+//            override fun onGlobalLayout() {
+//                val pageSplitter = PageSplitter(pagesView!!.getWidth(), pagesView!!.getHeight(), 1.toFloat(), 0)
+//                val textPaint = TextPaint()
+//                textPaint.textSize = resources.getDimension(R.dimen.text_size)
+//                for (i in 0..999) {
+//                    pageSplitter.append("Hello, ", textPaint)
+//                    textPaint.isFakeBoldText = true
+//                    pageSplitter.append("world", textPaint)
+//                    textPaint.isFakeBoldText = false
+//                    pageSplitter.append("! ", textPaint)
+//                    if ((i + 1) % 100 == 0) {
+//                        pageSplitter.append("\n", textPaint)
+//                    }
+//                }
+//                pagesView!!.setAdapter(ScreenSlidePagerAdapter(supportFragmentManager, pageSplitter.getPages()))
+//                pagesView!!.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+//            }
+//        })
 
         super.onStart()
     }
@@ -104,6 +106,8 @@ class MainActivity : AppCompatActivity() {
         fun addFragment(fragment: Fragment?) {
             arrayList.add(fragment!!)
         }
+
+
 
         override fun getItemCount(): Int {
             return NUM_PAGES
