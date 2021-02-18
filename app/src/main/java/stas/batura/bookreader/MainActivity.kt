@@ -7,7 +7,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import stas.batura.bookreader.ui.main.MainFragment
@@ -53,12 +52,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         pagesView = findViewById(R.id.pages)
-        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
+//        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         pagerAdapter!!.addFragment(MainFragment())
         pagerAdapter!!.addFragment(MainFragment())
 
         pagesView!!.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         pagesView!!.setAdapter(pagerAdapter)
+
+        //        // to get ViewPager width and height we have to wait global layout
+        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val pageSplitter = PageSplitter(pagesView!!.getWidth(), pagesView!!.getHeight(), 1.toFloat(), 0)
+                val textPaint = TextPaint()
+                textPaint.textSize = resources.getDimension(R.dimen.text_size)
+                for (i in 0..999) {
+                    pageSplitter.append("Hello, ", textPaint)
+                    textPaint.isFakeBoldText = true
+                    pageSplitter.append("world", textPaint)
+                    textPaint.isFakeBoldText = false
+                    pageSplitter.append("! ", textPaint)
+                    if ((i + 1) % 100 == 0) {
+                        pageSplitter.append("\n", textPaint)
+                    }
+                }
+                pagesView!!.setAdapter(ScreenSlidePagerAdapter(supportFragmentManager, pageSplitter.getPages()))
+                pagesView!!.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+            }
+        })
+
         super.onStart()
     }
 
@@ -66,8 +87,12 @@ class MainActivity : AppCompatActivity() {
      * A simple pager adapter that represents 2 ScreenSlidePageFragment objects, in
      * sequence.
      */
-    inner class ScreenSlidePagerAdapter(val fragmentManager: FragmentManager) :
+    inner class ScreenSlidePagerAdapter(val fragmentManager: FragmentManager,
+                                        pageTexts: List<CharSequence>?
+                                        ) :
             FragmentStateAdapter(fragmentManager, this@MainActivity.lifecycle) {
+
+        private val pageTexts: List<CharSequence>? = null
 
         private var arrayList: ArrayList<Fragment> = ArrayList()
 

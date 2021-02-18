@@ -21,6 +21,8 @@ public class TextPagerAdapter extends PagerAdapter {
         return false;
     }
 
+
+//
 //    @Override
 //    public Fragment getItem(int i) {
 //        return PageFragment.newInstance(pageTexts.get(i));
