@@ -13,6 +13,7 @@ import stas.batura.bookreader.ui.main.MainFragment
 import stas.batura.bookreader.ui.main.TextPagerAdapter
 import stas.batura.bookreader.ui.main.ViewPagerAdapter
 import stas.batura.bookreader.ui.main.utils.PageSplitter
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,20 +54,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         pagesView = findViewById(R.id.pages)
-        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, null)
-        pagerAdapter!!.addFragment(MainFragment.newInstance("my argument"))
-        pagerAdapter!!.addFragment(MainFragment.newInstance("my argument1"))
+//        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, null)
+
 
         pagesView!!.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        pagesView!!.adapter = pagerAdapter
+//        pagesView!!.adapter = pagerAdapter
 //        pagesView!!.adapter = ViewPagerAdapter()
 
-//        //        // to get ViewPager width and height we have to wait global layout
-//        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-//            override fun onGlobalLayout() {
-//                val pageSplitter = PageSplitter(pagesView!!.getWidth(), pagesView!!.getHeight(), 1.toFloat(), 0)
-//                val textPaint = TextPaint()
-//                textPaint.textSize = resources.getDimension(R.dimen.text_size)
+        //        // to get ViewPager width and height we have to wait global layout
+        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val pageSplitter = PageSplitter(pagesView!!.getWidth(), pagesView!!.getHeight(), 1.toFloat(), 0)
+                val textPaint = TextPaint()
+                textPaint.textSize = resources.getDimension(R.dimen.text_size)
 //                for (i in 0..999) {
 //                    pageSplitter.append("Hello, ", textPaint)
 //                    textPaint.isFakeBoldText = true
@@ -77,10 +77,23 @@ class MainActivity : AppCompatActivity() {
 //                        pageSplitter.append("\n", textPaint)
 //                    }
 //                }
-//                pagesView!!.setAdapter(ScreenSlidePagerAdapter(supportFragmentManager, pageSplitter.getPages()))
-//                pagesView!!.getViewTreeObserver().removeOnGlobalLayoutListener(this)
-//            }
-//        })
+                val text = resources.getString(R.string.cats_text)
+                pageSplitter.append(text, textPaint)
+                val pages = pageSplitter.getPages()
+                pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, pages)
+                pagesView!!.setAdapter(pagerAdapter)
+                pagesView!!.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+
+                for (page in pages) {
+                    pagerAdapter.addFragment(MainFragment.newInstance((page.toString())))
+                }
+
+//                pagerAdapter!!.addFragment(MainFragment.newInstance("my argument"))
+//                pagerAdapter!!.addFragment(MainFragment.newInstance("my argument1"))
+            }
+        })
+
+
 
         super.onStart()
     }
@@ -90,16 +103,15 @@ class MainActivity : AppCompatActivity() {
      * sequence.
      */
     inner class ScreenSlidePagerAdapter(val fragmentManager: FragmentManager,
-                                        pageTexts: List<CharSequence>?
+                                        val pageTexts: List<CharSequence>?
                                         ) :
             FragmentStateAdapter(fragmentManager, this@MainActivity.lifecycle) {
-
-        private val pageTexts: List<CharSequence>? = null
 
         private var arrayList: ArrayList<Fragment> = ArrayList()
 
         override fun createFragment(position: Int): Fragment {
             Log.d(TAG, "fragment pos=${position} created")
+            Log.d(TAG, "createFragment: ")
             return arrayList.get(position)
         }
 
@@ -110,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
 
         override fun getItemCount(): Int {
-            return NUM_PAGES
+            return pageTexts!!.size
         }
 
         fun removeFragments() {
