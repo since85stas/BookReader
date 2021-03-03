@@ -7,6 +7,7 @@ import android.text.TextPaint;
 import android.text.style.StyleSpan;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PageSplitter {
@@ -41,7 +42,7 @@ public class PageSplitter {
     }
 
     private void appendText(String text, TextPaint textPaint) {
-        String[] words = text.split(" ", -1);
+        String[] words = text.split(" ");
         int i;
         for (i = 0; i < words.length - 1; i++) {
             appendWord(words[i] + " ", textPaint);
@@ -66,6 +67,16 @@ public class PageSplitter {
     private void appendWord(String appendedText, TextPaint textPaint) {
         int textWidth = (int) Math.ceil(textPaint.measureText(appendedText));
         if (currentLineWidth + textWidth >= pageWidth) {
+            checkForPageEnd();
+            appendLineToPage(textLineHeight);
+        }
+        appendTextToLine(appendedText, textPaint, textWidth);
+    }
+
+    private void appendLastParagrWord(String appendedText, TextPaint textPaint) {
+        int textWidth = (int) Math.ceil(textPaint.measureText(appendedText));
+        if (currentLineWidth + textWidth < pageWidth) {
+            currentLineWidth = pageWidth;
             checkForPageEnd();
             appendLineToPage(textLineHeight);
         }
