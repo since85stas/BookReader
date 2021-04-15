@@ -10,10 +10,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import stas.batura.bookreader.ui.main.MainFragment
-import stas.batura.bookreader.ui.main.TextPagerAdapter
-import stas.batura.bookreader.ui.main.ViewPagerAdapter
 import stas.batura.bookreader.ui.main.utils.PageSplitter
-import kotlin.math.log
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.lang.StringBuilder
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,31 +27,29 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var pagerAdapter: ScreenSlidePagerAdapter
 
+    private lateinit var testText: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-//        pagesView = findViewById(R.id.pages) as ViewPager
 
-//        // to get ViewPager width and height we have to wait global layout
-//        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-//            override fun onGlobalLayout() {
-//                val pageSplitter = PageSplitter(pagesView!!.getWidth(), pagesView!!.getHeight(), 1.toFloat(), 0)
-//                val textPaint = TextPaint()
-//                textPaint.textSize = resources.getDimension(R.dimen.text_size)
-//                for (i in 0..999) {
-//                    pageSplitter.append("Hello, ", textPaint)
-//                    textPaint.isFakeBoldText = true
-//                    pageSplitter.append("world", textPaint)
-//                    textPaint.isFakeBoldText = false
-//                    pageSplitter.append("! ", textPaint)
-//                    if ((i + 1) % 100 == 0) {
-//                        pageSplitter.append("\n", textPaint)
-//                    }
-//                }
-//                pagesView!!.setAdapter(TextPagerAdapter(supportFragmentManager, pageSplitter.getPages()))
-//                pagesView!!.getViewTreeObserver().removeOnGlobalLayoutListener(this)
-//            }
-//        })
+        val input: InputStream = resources.openRawResource(R.raw.koshki_test)
+
+        val reader = BufferedReader(InputStreamReader(input))
+
+        val result = StringBuilder()
+
+        var line = reader.readLine()
+
+        while (line != null) {
+            result.append(line)
+            result.append("\n")
+            line = reader.readLine()
+        }
+
+        testText = result.toString()
+
+        Log.d(TAG, "onCreate: text")
     }
 
     override fun onStart() {
@@ -62,9 +62,15 @@ class MainActivity : AppCompatActivity() {
 //        pagesView!!.adapter = ViewPagerAdapter()
 
         //        // to get ViewPager width and height we have to wait global layout
-        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        pagesView!!.getViewTreeObserver().addOnGlobalLayoutListener(object :
+            OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                val pageSplitter = PageSplitter(pagesView!!.getWidth(), pagesView!!.getHeight(), 1.toFloat(), 0)
+                val pageSplitter = PageSplitter(
+                    pagesView!!.getWidth(),
+                    pagesView!!.getHeight(),
+                    1.toFloat(),
+                    0
+                )
                 val textPaint = TextPaint()
                 textPaint.textSize = resources.getDimension(R.dimen.text_size)
 //                for (i in 0..999) {
@@ -77,8 +83,8 @@ class MainActivity : AppCompatActivity() {
 //                        pageSplitter.append("\n", textPaint)
 //                    }
 //                }
-                val text = resources.getString(R.string.cats_text)
-                pageSplitter.append(text, textPaint)
+//                val text = resources.getString(R.string.cats_text)
+                pageSplitter.append(testText, textPaint)
                 val pages = pageSplitter.getPages()
                 pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, pages)
                 pagesView!!.setAdapter(pagerAdapter)
@@ -102,9 +108,10 @@ class MainActivity : AppCompatActivity() {
      * A simple pager adapter that represents 2 ScreenSlidePageFragment objects, in
      * sequence.
      */
-    inner class ScreenSlidePagerAdapter(val fragmentManager: FragmentManager,
-                                        val pageTexts: List<CharSequence>?
-                                        ) :
+    inner class ScreenSlidePagerAdapter(
+        val fragmentManager: FragmentManager,
+        val pageTexts: List<CharSequence>?
+    ) :
             FragmentStateAdapter(fragmentManager, this@MainActivity.lifecycle) {
 
         private var arrayList: ArrayList<Fragment> = ArrayList()
