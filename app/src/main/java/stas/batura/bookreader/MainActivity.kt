@@ -11,10 +11,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import stas.batura.bookreader.ui.main.MainFragment
 import stas.batura.bookreader.ui.main.utils.PageSplitter
+import stas.batura.bookreader.ui.main.utils.ZoomOutPageTransformer
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.lang.StringBuilder
 
 
 class MainActivity : AppCompatActivity() {
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         pagesView = findViewById(R.id.pages)
 //        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, null)
-
+        pagesView!!.setPageTransformer(ZoomOutPageTransformer())
 
         pagesView!!.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 //        pagesView!!.adapter = pagerAdapter
