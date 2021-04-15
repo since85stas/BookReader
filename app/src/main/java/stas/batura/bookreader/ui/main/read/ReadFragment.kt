@@ -40,7 +40,7 @@ class ReadFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.read_fragment, container, false)
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,8 +76,8 @@ class ReadFragment: Fragment() {
             ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val pageSplitter = PageSplitter(
-                    pages.getWidth(),
-                    pages.getHeight(),
+                    viewPager.getWidth(),
+                    viewPager.getHeight(),
                     1.toFloat(),
                     0
                 )
