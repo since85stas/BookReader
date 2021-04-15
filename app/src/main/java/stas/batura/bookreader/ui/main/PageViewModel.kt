@@ -2,6 +2,6 @@ package stas.batura.bookreader.ui.main
 
 import androidx.lifecycle.ViewModel
 
-class MainViewModel : ViewModel() {
+class PageViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

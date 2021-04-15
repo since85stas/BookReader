@@ -73,17 +73,6 @@ class MainActivity : AppCompatActivity() {
                 )
                 val textPaint = TextPaint()
                 textPaint.textSize = resources.getDimension(R.dimen.text_size)
-//                for (i in 0..999) {
-//                    pageSplitter.append("Hello, ", textPaint)
-//                    textPaint.isFakeBoldText = true
-//                    pageSplitter.append("world", textPaint)
-//                    textPaint.isFakeBoldText = false
-//                    pageSplitter.append("! ", textPaint)
-//                    if ((i + 1) % 100 == 0) {
-//                        pageSplitter.append("\n", textPaint)
-//                    }
-//                }
-//                val text = resources.getString(R.string.cats_text)
                 pageSplitter.append(testText, textPaint)
                 val pages = pageSplitter.getPages()
                 pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, pages)
@@ -93,9 +82,6 @@ class MainActivity : AppCompatActivity() {
                 for (page in pages) {
                     pagerAdapter.addFragment(MainFragment.newInstance((page.toString())))
                 }
-
-//                pagerAdapter!!.addFragment(MainFragment.newInstance("my argument"))
-//                pagerAdapter!!.addFragment(MainFragment.newInstance("my argument1"))
             }
         })
 

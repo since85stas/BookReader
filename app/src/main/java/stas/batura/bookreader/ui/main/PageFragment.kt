@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import stas.batura.bookreader.R
-import kotlin.math.log
 
 public val ARG = "teststring"
 
@@ -25,20 +24,20 @@ class MainFragment : Fragment() {
         }
     }
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: PageViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
         val view = inflater.inflate(R.layout.main_fragment, container, false)
-//        view.findViewById<TextView>(R.id.message).text = arg
+
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(PageViewModel::class.java)
         // TODO: Use the ViewModel
         Log.d("fragm", "onActivityCreated: " + arg)
 
