@@ -1,16 +1,26 @@
 package stas.batura.bookreader.ui.main.read
 
 import android.os.Bundle
+import android.text.TextPaint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.android.synthetic.main.read_fragment.*
 import stas.batura.bookreader.MainActivity
 import stas.batura.bookreader.R
+import stas.batura.bookreader.ui.main.PageFragment
+import stas.batura.bookreader.ui.main.utils.PageSplitter
+import stas.batura.bookreader.ui.main.utils.ZoomOutPageTransformer
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 
 private val TAG = "ReadFragment.kt"
 
@@ -18,9 +28,9 @@ class ReadFragment: Fragment() {
 
     private val TAG = "MainActivity.kt"
 
-    private var pagesView: ViewPager2? = null
+//    private var pagesView: ViewPager2? = null
 
-    private lateinit var pagerAdapter: MainActivity.ScreenSlidePagerAdapter
+    private lateinit var pagerAdapter: ScreenSlidePagerAdapter
 
     private lateinit var testText: String
 
@@ -34,8 +44,57 @@ class ReadFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val input: InputStream = resources.openRawResource(R.raw.koshki_test)
 
+        val reader = BufferedReader(InputStreamReader(input))
+
+        val result = StringBuilder()
+
+        var line = reader.readLine()
+
+        while (line != null) {
+            result.append(line)
+            result.append("\n")
+            line = reader.readLine()
+        }
+
+        testText = result.toString()
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onStart() {
+//        pagesView = findViewById(R.id.pages)
+//        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, null)
+        viewPager.setPageTransformer(ZoomOutPageTransformer())
+
+        viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+//        pagesView!!.adapter = pagerAdapter
+//        pagesView!!.adapter = ViewPagerAdapter()
+
+        //        // to get ViewPager width and height we have to wait global layout
+        viewPager.getViewTreeObserver().addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val pageSplitter = PageSplitter(
+                    pages.getWidth(),
+                    pages.getHeight(),
+                    1.toFloat(),
+                    0
+                )
+                val textPaint = TextPaint()
+                textPaint.textSize = resources.getDimension(R.dimen.text_size)
+                pageSplitter.append(testText, textPaint)
+                val pages = pageSplitter.getPages()
+                pagerAdapter = ScreenSlidePagerAdapter(requireActivity().supportFragmentManager, pages)
+                viewPager.setAdapter(pagerAdapter)
+                viewPager.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+
+                for (page in pages) {
+                    pagerAdapter.addFragment(PageFragment.newInstance((page.toString())))
+                }
+            }
+        })
+        super.onStart()
     }
 
     /**
@@ -59,8 +118,6 @@ class ReadFragment: Fragment() {
         fun addFragment(fragment: Fragment?) {
             arrayList.add(fragment!!)
         }
-
-
 
         override fun getItemCount(): Int {
             return pageTexts!!.size
