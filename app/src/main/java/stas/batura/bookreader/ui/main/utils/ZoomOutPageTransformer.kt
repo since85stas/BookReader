@@ -3,7 +3,7 @@ package stas.batura.bookreader.ui.main.utils
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 
-private const val MIN_SCALE = 0.85f
+private const val MIN_SCALE = 0.9f
 private const val MIN_ALPHA = 0.5f
 
 class ZoomOutPageTransformer : ViewPager2.PageTransformer {

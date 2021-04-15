@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import stas.batura.bookreader.ui.main.MainFragment
+import stas.batura.bookreader.ui.main.PageFragment
 import stas.batura.bookreader.ui.main.utils.PageSplitter
 import stas.batura.bookreader.ui.main.utils.ZoomOutPageTransformer
 import java.io.BufferedReader
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 pagesView!!.getViewTreeObserver().removeOnGlobalLayoutListener(this)
 
                 for (page in pages) {
-                    pagerAdapter.addFragment(MainFragment.newInstance((page.toString())))
+                    pagerAdapter.addFragment(PageFragment.newInstance((page.toString())))
                 }
             }
         })

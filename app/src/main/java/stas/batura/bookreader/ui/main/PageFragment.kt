@@ -12,12 +12,12 @@ import stas.batura.bookreader.R
 
 public val ARG = "teststring"
 
-class MainFragment : Fragment() {
+class PageFragment : Fragment() {
 
     private lateinit var arg: String
 
     companion object {
-        fun newInstance(arg: String) =             MainFragment().apply {
+        fun newInstance(arg: String) =             PageFragment().apply {
             arguments = Bundle().apply {
                 putString(ARG, arg)
             }
@@ -29,7 +29,7 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        val view = inflater.inflate(R.layout.main_fragment, container, false)
+        val view = inflater.inflate(R.layout.read_fragment, container, false)
 
         return view
     }
