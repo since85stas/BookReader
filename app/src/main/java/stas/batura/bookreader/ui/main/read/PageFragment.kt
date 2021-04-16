@@ -1,4 +1,4 @@
-package stas.batura.bookreader.ui.main
+package stas.batura.bookreader.ui.main.read
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle

@@ -3,9 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/readFragment">
+    app:startDestination="@id/controlsFragment">
     <fragment
         android:id="@+id/readFragment"
         android:name="stas.batura.bookreader.ui.main.read.ReadFragment"
-        android:label="ReadFragment" />
+        android:label="ReadFragment" >
+        <action
+            android:id="@+id/action_readFragment_to_controlsFragment"
+            app:destination="@id/controlsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/controlsFragment"
+        android:name="stas.batura.bookreader.ui.main.controls.ControlsFragment"
+        android:label="ControlsFragment" >
+        <action
+            android:id="@+id/action_controlsFragment_to_readFragment"
+            app:destination="@id/readFragment" />
+    </fragment>
 </navigation>

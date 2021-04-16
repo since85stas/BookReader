@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.read_fragment.*
 import stas.batura.bookreader.MainActivity
 import stas.batura.bookreader.R
-import stas.batura.bookreader.ui.main.PageFragment
 import stas.batura.bookreader.ui.main.utils.PageSplitter
 import stas.batura.bookreader.ui.main.utils.ZoomOutPageTransformer
 import java.io.BufferedReader
