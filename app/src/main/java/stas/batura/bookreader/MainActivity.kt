@@ -11,14 +11,14 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import stas.batura.bookreader.ui.main.PageFragment
+import dagger.hilt.android.AndroidEntryPoint
 import stas.batura.bookreader.ui.main.utils.PageSplitter
 import stas.batura.bookreader.ui.main.utils.ZoomOutPageTransformer
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity.kt"

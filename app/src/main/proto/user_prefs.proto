@@ -8,7 +8,12 @@ message UserPreferences {
   // filter for showing / hiding completed tasks
   bool show_completed = 1;
 
-  bool is_not_first_open = 10;
+  bool is_not_first_open = 2;
 
+  int32 last_page = 3;
+
+  int32 font_size = 4;
+
+  int32 book_is_bought = 5;
 
 }

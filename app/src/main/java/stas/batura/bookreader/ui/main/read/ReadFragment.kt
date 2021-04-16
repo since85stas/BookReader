@@ -39,6 +39,9 @@ class ReadFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.read_fragment, container, false)
+
+
+
         return root
     }
 

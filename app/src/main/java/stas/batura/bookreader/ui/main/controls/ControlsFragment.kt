@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import stas.batura.bookreader.R
 import stas.batura.bookreader.databinding.ControlFragmentBinding
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
+@AndroidEntryPoint
 class ControlsFragment(): Fragment() {
 
     lateinit var viewModel: ControlsViewModel
@@ -25,7 +28,7 @@ class ControlsFragment(): Fragment() {
         savedInstanceState: Bundle?
     ): View? {
          viewModel =
-            ViewModelProvider(requireActivity()).get(ControlsViewModel::class.java)
+            ViewModelProvider(this).get(ControlsViewModel::class.java)
 
         val root = inflater.inflate(R.layout.control_fragment, container, false)
 
@@ -42,7 +45,18 @@ class ControlsFragment(): Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        bindings.readButton.setOnClickListener {
+            goToReadFragm()
+        }
+
         super.onViewCreated(view, savedInstanceState)
+    }
+
+
+    private fun goToReadFragm() {
+        val action = ControlsFragmentDirections.actionControlsFragmentToReadFragment()
+        findNavController().navigate(action)
     }
 
 }
