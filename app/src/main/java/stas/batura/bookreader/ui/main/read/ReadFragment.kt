@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.read_fragment.*
 import stas.batura.bookreader.MainActivity
 import stas.batura.bookreader.R
+import stas.batura.bookreader.ui.main.controls.ControlsViewModel
 import stas.batura.bookreader.ui.main.utils.PageSplitter
 import stas.batura.bookreader.ui.main.utils.ZoomOutPageTransformer
 import java.io.BufferedReader
@@ -23,6 +26,7 @@ import java.io.InputStreamReader
 
 private val TAG = "ReadFragment.kt"
 
+@AndroidEntryPoint
 class ReadFragment: Fragment() {
 
     private val TAG = "MainActivity.kt"
@@ -33,15 +37,17 @@ class ReadFragment: Fragment() {
 
     private lateinit var testText: String
 
+    private lateinit var viewModel: ReadViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        viewModel =
+            ViewModelProvider(this).get(ReadViewModel::class.java)
         val root = inflater.inflate(R.layout.read_fragment, container, false)
-
-
-
         return root
     }
 
@@ -61,12 +67,18 @@ class ReadFragment: Fragment() {
         }
 
         testText = result.toString()
+
+        getPages()
         super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onStart() {
-//        pagesView = findViewById(R.id.pages)
-//        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, null)
+        super.onStart()
+
+
+    }
+
+    private fun getPages() {
         viewPager.setPageTransformer(ZoomOutPageTransformer())
 
         viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -94,9 +106,10 @@ class ReadFragment: Fragment() {
                 for (page in pages) {
                     pagerAdapter.addFragment(PageFragment.newInstance((page.toString())))
                 }
+
+                viewPager.currentItem = 3
             }
         })
-        super.onStart()
     }
 
     /**
@@ -115,6 +128,11 @@ class ReadFragment: Fragment() {
             Log.d(TAG, "fragment pos=${position} created")
             Log.d(TAG, "createFragment: ")
             return arrayList.get(position)
+        }
+
+        override fun getItemId(position: Int): Long {
+            Log.d(TAG, "getItemId: $position" )
+            return super.getItemId(position)
         }
 
         fun addFragment(fragment: Fragment?) {
