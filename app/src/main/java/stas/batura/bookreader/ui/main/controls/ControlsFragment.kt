@@ -14,6 +14,7 @@ import stas.batura.bookreader.databinding.ControlFragmentBinding
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import kotlin.text.Typography.dagger
 
 @AndroidEntryPoint
 class ControlsFragment(): Fragment() {

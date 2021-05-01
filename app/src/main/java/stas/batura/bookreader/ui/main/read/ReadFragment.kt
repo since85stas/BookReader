@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.read_fragment.*
 import stas.batura.bookreader.MainActivity
 import stas.batura.bookreader.R
+import stas.batura.bookreader.databinding.ReadFragmentBinding
 import stas.batura.bookreader.ui.main.controls.ControlsViewModel
 import stas.batura.bookreader.ui.main.utils.PageSplitter
 import stas.batura.bookreader.ui.main.utils.ZoomOutPageTransformer
@@ -39,6 +41,8 @@ class ReadFragment: Fragment() {
 
     private lateinit var viewModel: ReadViewModel
 
+    private lateinit var bindings: ReadFragmentBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,8 +51,17 @@ class ReadFragment: Fragment() {
 
         viewModel =
             ViewModelProvider(this).get(ReadViewModel::class.java)
-        val root = inflater.inflate(R.layout.read_fragment, container, false)
-        return root
+
+        bindings = DataBindingUtil.inflate(inflater,
+        R.layout.read_fragment,
+        container,
+        false)
+
+        bindings.viewModel = viewModel
+
+        bindings.lifecycleOwner = viewLifecycleOwner
+
+        return bindings.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,6 +82,10 @@ class ReadFragment: Fragment() {
         testText = result.toString()
 
         getPages()
+
+        viewModel.currentPage.observe(viewLifecycleOwner) {
+            viewPager.currentItem = it
+        }
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -107,7 +124,7 @@ class ReadFragment: Fragment() {
                     pagerAdapter.addFragment(PageFragment.newInstance((page.toString())))
                 }
 
-                viewPager.currentItem = 3
+//                viewPager.currentItem = 3
             }
         })
     }
