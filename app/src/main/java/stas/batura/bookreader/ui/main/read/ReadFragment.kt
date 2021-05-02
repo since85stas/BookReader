@@ -33,8 +33,6 @@ class ReadFragment: Fragment() {
 
     private val TAG = "MainActivity.kt"
 
-//    private var pagesView: ViewPager2? = null
-
     private lateinit var pagerAdapter: ScreenSlidePagerAdapter
 
     private lateinit var testText: String
@@ -42,6 +40,8 @@ class ReadFragment: Fragment() {
     private lateinit var viewModel: ReadViewModel
 
     private lateinit var bindings: ReadFragmentBinding
+
+    private var startPage: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,10 +61,39 @@ class ReadFragment: Fragment() {
 
         bindings.lifecycleOwner = viewLifecycleOwner
 
+        startPage = viewModel.repository.getLastPage()
+
         return bindings.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        readData()
+
+        getPages()
+
+        viewModel.currentPage.observe(viewLifecycleOwner) {
+            viewPager.currentItem = it
+        }
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                // Теперь только необходимое
+                viewModel.savePageToDb(position)
+            }
+        })
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+    /**
+     * считываем данные
+     */
+    private fun readData() {
         val input: InputStream = resources.openRawResource(R.raw.koshki_test)
 
         val reader = BufferedReader(InputStreamReader(input))
@@ -80,27 +109,12 @@ class ReadFragment: Fragment() {
         }
 
         testText = result.toString()
-
-        getPages()
-
-        viewModel.currentPage.observe(viewLifecycleOwner) {
-            viewPager.currentItem = it
-        }
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-
     }
 
     private fun getPages() {
         viewPager.setPageTransformer(ZoomOutPageTransformer())
 
         viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-//        pagesView!!.adapter = pagerAdapter
-//        pagesView!!.adapter = ViewPagerAdapter()
 
         //        // to get ViewPager width and height we have to wait global layout
         viewPager.getViewTreeObserver().addOnGlobalLayoutListener(object :
@@ -124,7 +138,7 @@ class ReadFragment: Fragment() {
                     pagerAdapter.addFragment(PageFragment.newInstance((page.toString())))
                 }
 
-//                viewPager.currentItem = 3
+                viewPager.currentItem = startPage
             }
         })
     }
@@ -151,6 +165,8 @@ class ReadFragment: Fragment() {
             Log.d(TAG, "getItemId: $position" )
             return super.getItemId(position)
         }
+
+
 
         fun addFragment(fragment: Fragment?) {
             arrayList.add(fragment!!)

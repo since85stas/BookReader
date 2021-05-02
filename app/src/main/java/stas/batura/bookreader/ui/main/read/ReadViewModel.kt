@@ -18,4 +18,8 @@ class ReadViewModel @ViewModelInject constructor(val repository: IRepository) : 
     fun setCurrentPage(page: Int) {
         currentPage.value = page
     }
+
+    fun savePageToDb(page: Int) {
+        repository.setLastPage(page)
+    }
 }
