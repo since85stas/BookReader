@@ -16,13 +16,34 @@
             android:id="@+id/readButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="read"
+            android:text="читать"
+            app:layout_constraintBottom_toTopOf="@id/buyButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"></Button>
+
+        <Button
+            android:id="@+id/buyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="купить"
+            app:layout_constraintBottom_toTopOf="@id/aboutButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/readButton"></Button>
+
+        <Button
+            android:id="@+id/aboutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="о авторе"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </Button>
+            app:layout_constraintTop_toBottomOf="@id/buyButton"></Button>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

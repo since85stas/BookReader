@@ -11,6 +11,10 @@
         <action
             android:id="@+id/action_readFragment_to_controlsFragment"
             app:destination="@id/controlsFragment" />
+        <argument
+            android:name="contRead"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
@@ -20,5 +24,6 @@
         <action
             android:id="@+id/action_controlsFragment_to_readFragment"
             app:destination="@id/readFragment" />
+
     </fragment>
 </navigation>

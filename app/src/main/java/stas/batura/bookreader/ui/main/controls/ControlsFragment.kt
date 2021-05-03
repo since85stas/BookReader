@@ -48,15 +48,16 @@ class ControlsFragment(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         bindings.readButton.setOnClickListener {
-            goToReadFragm()
+            goToReadFragm(false)
         }
 
         super.onViewCreated(view, savedInstanceState)
     }
 
 
-    private fun goToReadFragm() {
-        val action = ControlsFragmentDirections.actionControlsFragmentToReadFragment()
+    private fun goToReadFragm(con: Boolean) {
+        val action = ControlsFragmentDirections.actionControlsFragmentToReadFragment(con)
+
         findNavController().navigate(action)
     }
 
